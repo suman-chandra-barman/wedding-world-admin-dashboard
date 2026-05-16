@@ -45,6 +45,7 @@ export const getUserFromStorage = (): User | null => {
 };
 
 export const saveUserToStorage = (user: User) => {
+
   if (typeof window !== "undefined") {
     localStorage.setItem("auth_user", JSON.stringify(user));
 

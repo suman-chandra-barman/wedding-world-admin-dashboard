@@ -89,6 +89,7 @@ function VerifyResetOtpContent() {
               id: "",
               email: email,
               email_address: email,
+              role: "",
               profile_image: null,
             },
             tokens: {

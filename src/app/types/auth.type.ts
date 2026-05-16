@@ -155,7 +155,7 @@ export interface User {
   last_name?: string;
   full_name?: string;
   email_address?: string;
-  role?: string;
+  role: string;
   profile_image: string | null;
 }
 
