@@ -6,15 +6,6 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "**.devtunnels.ms",
-      },
-      {
-        protocol: "http",
-        hostname: "**.devtunnels.ms",
-      },
-      {
-        protocol: "https",
-        hostname: "api.hey-ineed.com",
-        pathname: "/**",
       }
     ],
   },
