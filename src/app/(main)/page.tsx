@@ -19,6 +19,7 @@ import {
 import type { CategoryImage, CategoryItem } from "@/app/types/category.type";
 import { getErrorMessage } from "../lib/error";
 import CreateCategoryModal from "@/components/Modals/CreateCategoryModal";
+import EditCategoryModal from "@/components/Modals/EditCategoryModal";
 import EditProductModal, {
   type ProductFormValues,
 } from "@/components/Modals/EditProductModal";
@@ -41,8 +42,10 @@ const CategoriesPage = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingName, setEditingName] = useState("");
+  const [isEditCategoryModalOpen, setIsEditCategoryModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<CategoryItem | null>(
+    null,
+  );
   const [deleteCategoryId, setDeleteCategoryId] = useState<number | null>(null);
   const [deleteImageId, setDeleteImageId] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState<CategoryItem | null>(
@@ -86,18 +89,17 @@ const CategoriesPage = () => {
     }
   };
 
-  const handleStartEdit = (category: CategoryItem) => {
-    setEditingId(category.category_id);
-    setEditingName(category.category_type);
+  const openEditCategoryModal = (category: CategoryItem) => {
+    setEditingCategory(category);
+    setIsEditCategoryModalOpen(true);
   };
 
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setEditingName("");
-  };
+  const handleSaveCategory = async (name: string) => {
+    if (!editingCategory) {
+      return;
+    }
 
-  const handleSaveEdit = async (category: CategoryItem) => {
-    const trimmedName = editingName.trim();
+    const trimmedName = name.trim();
     if (!trimmedName) {
       toast.error("Category name is required.");
       return;
@@ -108,11 +110,12 @@ const CategoriesPage = () => {
 
     try {
       await updateCategory({
-        id: category.category_id,
+        id: editingCategory.category_id,
         data: formData,
       }).unwrap();
       toast.success("Category updated successfully.");
-      handleCancelEdit();
+      setIsEditCategoryModalOpen(false);
+      setEditingCategory(null);
     } catch (error) {
       toast.error(getErrorMessage(error, "Failed to update category."));
     }
@@ -263,7 +266,6 @@ const CategoriesPage = () => {
           </div>
         )}
         {filteredCategories.map((category) => {
-          const isEditing = editingId === category.category_id;
           const productCount = category.images.length;
 
           return (
@@ -273,46 +275,18 @@ const CategoriesPage = () => {
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="space-y-1">
-                  {isEditing ? (
-                    <div className="flex items-center gap-2">
-                      <Input
-                        value={editingName}
-                        onChange={(event) => setEditingName(event.target.value)}
-                        className="h-10 max-w-xs"
-                      />
-                      <Button
-                        type="button"
-                        size="sm"
-                        className="h-9"
-                        onClick={() => handleSaveEdit(category)}
-                        disabled={isUpdatingCategory}
-                      >
-                        Save
-                      </Button>
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        className="h-9"
-                        onClick={handleCancelEdit}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-semibold text-foreground">
-                        {category.category_type}
-                      </h3>
-                      <button
-                        type="button"
-                        className="rounded-full p-2 text-muted-foreground transition hover:bg-white hover:text-foreground"
-                        onClick={() => handleStartEdit(category)}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {category.category_type}
+                    </h3>
+                    <button
+                      type="button"
+                      className="rounded-full p-2 text-muted-foreground transition hover:bg-white hover:text-foreground"
+                      onClick={() => openEditCategoryModal(category)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     {productCount} product{productCount === 1 ? "" : "s"}
                   </p>
@@ -390,6 +364,19 @@ const CategoriesPage = () => {
           await handleCreateCategory(name);
         }}
         isLoading={isCreating}
+      />
+
+      <EditCategoryModal
+        open={isEditCategoryModalOpen}
+        onOpenChange={(open) => {
+          setIsEditCategoryModalOpen(open);
+          if (!open) {
+            setEditingCategory(null);
+          }
+        }}
+        onSave={handleSaveCategory}
+        initialName={editingCategory?.category_type}
+        isLoading={isUpdatingCategory}
       />
 
       <EditProductModal
