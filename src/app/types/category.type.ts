@@ -1,6 +1,9 @@
 export interface CategoryImage {
   id: number;
   image_url: string;
+  brand_name: string | null;
+  dress_name: string | null;
+  web_url: string | null;
   uploaded_at: string;
 }
 

@@ -41,6 +41,17 @@ export const categoriesApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Category"],
     }),
+    addCategoryImage: builder.mutation<
+      CategoryImageResponse,
+      { categoryId: number; data: FormData }
+    >({
+      query: ({ categoryId, data }) => ({
+        url: `/admin/categories/${categoryId}/images/`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Category"],
+    }),
     deleteCategory: builder.mutation<CategoryDeleteResponse, number>({
       query: (id) => ({
         url: `/admin/categories/${id}/`,
@@ -74,6 +85,7 @@ export const {
   useGetCategoryQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
+  useAddCategoryImageMutation,
   useDeleteCategoryMutation,
   useDeleteCategoryImageMutation,
   useUpdateCategoryImageMutation,
