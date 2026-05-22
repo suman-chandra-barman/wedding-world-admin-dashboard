@@ -220,6 +220,7 @@ const CategoriesPage = () => {
         </p>
       </div>
 
+      {/* Search and create section */}
       <section>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex w-full flex-1 items-center gap-2 md:max-w-md">
@@ -227,7 +228,7 @@ const CategoriesPage = () => {
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search category"
-              className="h-11 rounded-xl"
+              className="h-11 rounded-xl border-amber-200"
             />
           </div>
           <Button
