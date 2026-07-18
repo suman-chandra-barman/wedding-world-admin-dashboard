@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.weddingworld.de",
+        hostname: "virtual-bridal-fitting-room.weddingworld.de",
       },
     ],
   },
