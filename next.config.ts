@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.devtunnels.ms",
-      }
+        hostname: "**.weddingworld.de",
+      },
     ],
   },
 };
