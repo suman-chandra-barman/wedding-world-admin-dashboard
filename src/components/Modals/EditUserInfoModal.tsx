@@ -196,6 +196,7 @@ export default function EditUserInfoModal({
               id="email"
               type="email"
               placeholder="Enter your email"
+              readOnly
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full"
